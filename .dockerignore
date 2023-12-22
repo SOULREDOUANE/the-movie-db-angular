@@ -1,0 +1,11 @@
+**/ndoe_modules/
+**/.git
+**/README.md
+**/LISCENSE
+**/.vscode
+**/.npm-debug.log
+**/coverage
+**/.env
+**/.editorconfig
+**/.aws
+**/dist
