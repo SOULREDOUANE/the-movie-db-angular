@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'my-github-access-key', url: 'https://github.com/SOULREDOUANE/deploy-angular-app.git']]])
+                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'my-github-access-key', url: 'https://github.com/SOULREDOUANE/dockerize-angular.git']]])
          	}
             }
         }
