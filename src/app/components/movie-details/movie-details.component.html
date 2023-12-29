@@ -1,0 +1,36 @@
+<div class="details-comment">
+
+
+  <div class="container-details">
+    <div class="image"><img [src]="'https://image.tmdb.org/t/p/w500' + movie?.poster_path" alt="{{ movie?.title }}">
+    </div>
+    <div class="details-content">
+      <div class="container-content">
+        <h4 class="title"> {{movie?.title}} </h4>
+        <div class="release-date">Release Date : <span class="date-content">{{movie?.release_date}}</span> </div>
+        <div class="popularity">Popularity : <span class="popularity-content">{{movie?.popularity}}</span></div>
+        <div class="popularity">Vote Average : <span class="popularity-content">{{movie?.vote_average}}</span></div>
+        <div class="popularity">Original Language : <span class="popularity-content">{{movie?.original_language}}</span>
+        </div>
+        <div class="popularity">Number of Total Votes : <span class="popularity-content">{{movie?.vote_count}}
+            votes</span></div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="comments"   >
+    <div class="write-comment">
+      <div class="label">Give your feedback on this movie here!</div>
+      <textarea name="" id="" cols="35" rows="4" [(ngModel)]="content"></textarea>
+      <br>
+      <button class="save-comment" (click)="addComment()">Save</button>
+    </div>
+    <div *ngFor="let comment of comments; let i = index ">
+
+      <app-commentaire-item [comment]="comment"></app-commentaire-item>
+    </div>
+
+  </div>
+</div>
