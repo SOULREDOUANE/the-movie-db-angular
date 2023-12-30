@@ -1,3 +1,4 @@
+import { MovieBackend } from './../../modules/movie-backend';
 import { FavoriteServiceService } from './../../services/favorite-service.service';
 import { Component, Input } from '@angular/core';
 import { Movie } from '../../modules/movie';
@@ -21,18 +22,38 @@ export class MovieItemComponent {
 
   toggleColor(event: Event) {
     event.preventDefault();
+
     if (this.movie.isFavorite) {
       this.movie.isFavorite = !this.movie.isFavorite;
-      const index = this.favoriteService.favoriteMovies.indexOf(this.movie);
-      this.isFavorite=this.movie.isFavorite;
-      console.log(this.isFavorite)
+      let movieBackend :MovieBackend = {
+        originalMovieId: this.movie.id,
+        name: this.movie.title,
+        isFavorite: this.movie.isFavorite
+      };
+      console.log(this.movie.isFavorite)
+      this.favoriteService.updateMovie(movieBackend.originalMovieId, movieBackend).subscribe(
+        (updatedMovie) => {
+          console.log('Movie updated successfully:', updatedMovie);
+          // Handle success if needed
+        },
+        (error) => {
+          console.error('Failed to update movie:', error);
+          // Handle error if needed
+        }
+      );
 
     } else {
       console.log(this.movie)
-        this.favoriteService.favoriteMovies.push(this.movie);
+
         this.movie.isFavorite = !this.movie.isFavorite;
-        this.isFavorite=this.movie.isFavorite;
-        console.log(this.isFavorite)
+
+        let movieBackend :MovieBackend = {
+          originalMovieId: this.movie.id,
+          name: this.movie.title,
+          isFavorite: this.movie.isFavorite
+        };
+
+      this.favoriteService.saveFavoriteMovie(movieBackend);
     }
 
   }

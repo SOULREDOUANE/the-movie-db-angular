@@ -15,6 +15,7 @@ import { FavoriteServiceService } from '../../services/favorite-service.service'
 export class FavoriteComponent implements OnInit {
   constructor(private favoriteService : FavoriteServiceService){}
   ngOnInit(): void {
+    this.favoriteService.getFavoriteMovies();
     this.movies=this.favoriteService.favoriteMovies;
   }
   // searchValue!:string;
