@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'my-github-access-key', url: 'https://github.com/SOULREDOUANE/dockerize-angular.git']]])
+                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'my-github-access-key', url: 'https://github.com/SOULREDOUANE/the-movie-db-angular.git ']]])
          	}
             }
         }
@@ -21,7 +21,7 @@ pipeline {
 
                     sh "docker logout"
                     // Build Docker image using the Dockerfile in your project
-                    sh "docker build -t automate-angular ."
+                    sh "docker build -t angular-movie ."
                 }
             }
         }
@@ -32,8 +32,8 @@ pipeline {
             }
         stage('Push') {
 			steps {
-				sh 'docker tag automate-angular:latest soulredouane/automate-angular:latest'
-				sh 'docker push soulredouane/automate-angular'
+				sh 'docker tag angular-movie:latest soulredouane/angular-movie:latest'
+				sh 'docker push soulredouane/angular-movie:latest'
 				sh "docker logout"
 			}
 		}
