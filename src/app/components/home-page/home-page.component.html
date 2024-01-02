@@ -6,7 +6,8 @@
   <div class="nav-container">
     <a class="nav-element" href=""><strong>Home</strong></a>
     <a class="nav-element" href=""  [routerLink]="['/favorites']" routerLinkActive="active"><strong>Favorite</strong></a>
-    <a class="nav-element" href=""><Strong>Sign Out</Strong></a>
+    <a class="nav-element" href="/auth/login"><Strong>Sign Out</Strong></a>
+    <a class="nav-element" href=""><strong>{{this.username}}</strong></a>
   </div>
 </div>
 <!-- ------ -->
