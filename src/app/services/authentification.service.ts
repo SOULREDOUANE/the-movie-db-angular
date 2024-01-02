@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import { Router, UrlTree} from "@angular/router";
 import { Observable } from "rxjs";
+import {environment} from "../../environments/environment";
 
 
 
@@ -18,8 +19,9 @@ export class AuthenticationService {
   private static instance: AuthenticationService;
   private static router: Router;
   private static http: HttpClient;
+  private url: string = environment.API_BASE_URL;
 
-  constructor(private r: Router, private h: HttpClient) {
+  constructor(r: Router, h: HttpClient) {
     AuthenticationService.http = h;
     AuthenticationService.router = r;
   }
@@ -31,7 +33,7 @@ export class AuthenticationService {
   }
 
   authenticate(credentials: Credentials): void {
-    AuthenticationService.http.post('http://localhost:4201/register/login', credentials)
+    AuthenticationService.http.post(`${this.url}/register/login`, credentials)
       .subscribe((response: any) => {
         if (response && response.success) {
           localStorage.setItem('Auth', 'true')
@@ -60,8 +62,8 @@ export class AuthenticationService {
   signUp(username: string, password: string) {
 
     const credentials = { username, password };
-    const signUpUrl = 'http://localhost:4201/register';
-    AuthenticationService.router.navigate(['/auth/authL']).then(r => true);
+    const signUpUrl = `${this.url}/register`;
+    AuthenticationService.router.navigate(['/auth/login']).then(r => true);
     return AuthenticationService.http.post(signUpUrl, credentials).subscribe(
       (response) => {
         console.log('Response:', response);
@@ -79,7 +81,7 @@ export class AuthenticationService {
     | boolean
     | UrlTree {
     if (!this.isAuthenticated()) {
-      this.router.navigate(['/auth/authL']);
+      this.router.navigate(['/auth/login']);
       return false;
     }
     return true;
@@ -97,8 +99,7 @@ export class AuthenticationService {
       const storedUsername = localStorage.getItem('username');
       return storedUsername ? String(storedUsername) : '';
     } else {
-      // Handle the case when localStorage is not available
-      return ''; // or any default value
+      return '';
     }
   }
 }

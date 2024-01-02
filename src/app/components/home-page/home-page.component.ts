@@ -5,6 +5,7 @@ import { MovieItemComponent } from '../movie-item/movie-item.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgModel } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import {AuthenticationService} from "../../services/authentification.service";
 
 @Component({
   selector: 'app-home-page',
@@ -18,9 +19,11 @@ import { RouterLink } from '@angular/router';
   providedIn: 'root'
 })
 export class HomePageComponent implements OnInit {
-    constructor(private movieService : ServiceService){}
-    searchValue!:string;
-    movies!:Movie[]
+
+  username: string = AuthenticationService.getUser();
+  constructor(private movieService : ServiceService){}
+  searchValue!:string;
+  movies!:Movie[]
 
 
   ngOnInit(): void {
@@ -55,6 +58,6 @@ export class HomePageComponent implements OnInit {
     }
 
     getFavoriteMovies(){
-      
+
     }
 }
