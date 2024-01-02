@@ -13,11 +13,13 @@ import { environment } from '../../environments/environment';
 })
 export class FavoriteServiceService {
   BACKEND_API:string = environment.API_BASE_URL
+
   constructor(private serviceService:ServiceService ,private http: HttpClient) { }
 
   favoriteMovies:Movie[]=[];
 
   getFavoriteMovies() : void {
+    console.log(environment.API_BASE_URL)
     let backendMovies:MovieBackend[]=[];
     this.http.get<any>(`${this.BACKEND_API}/api/v1/movie/favorite`).subscribe(response => {
       backendMovies = response;

@@ -1,4 +1,4 @@
 export const environment={
   production:true,
-  API_BASE_URL: 'http://10.0.1.50:8081'
+  API_BASE_URL: 'http://35.181.255.10:8081'
 }
