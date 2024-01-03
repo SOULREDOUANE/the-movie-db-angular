@@ -15,10 +15,8 @@
 
 <div class="container">
 
-  <div  *ngFor="let movie of movies; let i = index "  class="film-container">
-
+  <div  *ngFor="let movie of films; let i = index "  class="film-container">
       <app-movie-item  [movie]="movie"></app-movie-item>
-
   </div>
 </div>
 

@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommentaireItemComponent } from '../commentaire-item/commentaire-item.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import {AuthenticationService} from "../../services/authentification.service";
 
 @Component({
   selector: 'app-movie-details',
@@ -21,16 +22,22 @@ export class MovieDetailsComponent implements OnInit{
   comments : Comment[] = [];
 
   content!:string;
-  public user!: string;
+  public user: string = AuthenticationService.getUser();
   public isFavorited : boolean = false;
 
-  constructor(private movieService :ServiceService ,private route: ActivatedRoute, private favS: FavoriteServiceService){}
+  constructor(private movieService :ServiceService ,private route: ActivatedRoute, public favS: FavoriteServiceService){}
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const id = params['id'];
-      this.movieId=id;
+      this.movieId = id;
+    });
+    this.favS.estFavorise(this.user, this.movieId+'').then((isFavorited) => {
+      this.isFavorited = isFavorited;
+    }).catch((error) => {
+      console.error('Error checking favoritism:', error);
     });
     this.getMovieDetails()
+
   }
 
 
@@ -57,19 +64,27 @@ export class MovieDetailsComponent implements OnInit{
   }
 
   public addFavorite(username: string, filmId: string) {
-    this.favS.sendComment(username, filmId).subscribe(
-      (response) => {
+    this.favS.sendFavorite(username, filmId).subscribe(
+      res => {
         this.isFavorited = true;
-        console.log('Comment sent successfully!', response);
+        console.log(res)
       },
-      (error) => {
-        console.error('Error sending comment:', error);
+      error => {
+
       }
-    );
+    )
   }
 
   public deleteFavorite(username: string, filmId: string) {
+    this.favS.deleteFavorite(username, filmId).subscribe(
+      res => {
+        this.isFavorited = false;
+        console.log(res)
+      },
+      error => {
 
+      }
+    )
 
   }
 }

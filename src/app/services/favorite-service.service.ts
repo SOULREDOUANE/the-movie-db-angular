@@ -1,10 +1,8 @@
-import { MovieBackend } from './../modules/movie-backend';
-import { Observable, catchError, of } from 'rxjs';
-import { Movie } from './../modules/movie';
+import {Observable, map, mergeMap, forkJoin} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { ServiceService } from './service.service';
-import { Injectable, ɵisEnvironmentProviders } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { Injectable } from '@angular/core';
+import {AuthenticationService} from "./authentification.service";
+import {environment} from "../../environments/environment";
 
 
 
@@ -13,56 +11,67 @@ import { environment } from '../../environments/environment';
 })
 export class FavoriteServiceService {
   BACKEND_API:string = environment.API_BASE_URL
+  //private BACKEND_API: string = 'http://localhost:8081';
+  API_TOKEN: string = '834805b4c6cf9aff20541bd2213dce6d';
+  base_url: string = 'https://api.themoviedb.org/3/';
+  language: string = 'fr';
 
-  constructor(private serviceService:ServiceService ,private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  favoriteMovies:Movie[]=[];
 
-  getFavoriteMovies() : void {
-    console.log(environment.API_BASE_URL)
-    let backendMovies:MovieBackend[]=[];
-    this.http.get<any>(`${this.BACKEND_API}/api/v1/movie/favorite`).subscribe(response => {
-      backendMovies = response;
-      for (let index = 0; index < backendMovies.length; index++) {
-        this.serviceService.getMoviesById(backendMovies[index].originalMovieId).subscribe(movie => {
-          // movie=movie.isFavorite=backendMovies[index].isFavorite;
-          this.favoriteMovies.push(movie);
-          this.favoriteMovies[index].isFavorite=true;
+
+  public getFavoriteFilms(): Observable<any[]> {
+    return this.getFilmIds().pipe(
+      mergeMap((ids: string[]) => {
+        const movieRequests: Observable<any>[] = [];
+
+        ids.forEach(id => {
+          const url = `${this.base_url}movie/${id}?api_key=${this.API_TOKEN}&language=${this.language}`;
+          movieRequests.push(this.http.get<any>(url));
         });
-      }
+
+        return forkJoin(movieRequests);
+      })
+    );
+  }
 
 
+  public getFilmIds(): Observable<string[]> {
+    const username = AuthenticationService.getUser();
+    const endpoint = 'http://localhost:8081/favorite/${username}';
+
+    return this.http.get<any[]>(endpoint).pipe(
+      map((data: any[]) => {
+        return data.map(item => item.filmId);
+      })
+    );
+  }
+
+  public estFavorise(username: string, filmId: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      this.http.post<any>('http://localhost:8081/favorite', { username, filmId })
+        .subscribe(
+          (response: any) => {
+            if (response && response.success) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          },
+          (error) => {
+            reject(error);
+          }
+        );
     });
   }
 
-  saveFavoriteMovie(movieBackend: MovieBackend): void {
-    this.http.post<any>(`${this.BACKEND_API}/api/v1/movie/create`, movieBackend)
-      .subscribe(
-        (response) => {
-          console.log('Movie saved successfully:', response);
-          // Handle success if needed
-        },
-        (error) => {
-          console.error('Failed to save movie:', error);
-          // Handle error if needed
-        }
-      );
+
+  deleteFavorite(username: string, filmId: string): Observable<any> {
+    return this.http.post<any>('http://localhost:8081/favorite/supprimer', { username, filmId });
   }
 
-  deleteMovie(id :number):void{
-    this.http.delete<any>(`${this.BACKEND_API}/api/v1/movie/delete/${id}`);
-  }
-
-  updateMovie(id: number, movieBackend: MovieBackend): Observable<Movie> {
-    console.log("I'm working");
-    return this.http.put<Movie>(`${this.BACKEND_API}/api/v1/movie/update/${id}`, movieBackend)
-      .pipe(
-        catchError((error) => {
-          console.error('Failed to update movie:', error);
-          // Handle error as needed, for example, throw an error or return a default movie
-          throw error;
-        })
-      );
+  sendFavorite(username: string, filmId: string): Observable<any> {
+    return this.http.post<any>('http://localhost:8081/favorite/ajouter', { username, filmId });
   }
 
 
