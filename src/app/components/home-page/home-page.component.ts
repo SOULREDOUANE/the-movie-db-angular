@@ -28,7 +28,6 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getMovies();
-    // console.log("hi there ")
   }
 
 
@@ -41,10 +40,7 @@ export class HomePageComponent implements OnInit {
     this.movies = [];
 
     this.movieService.searchMovies(this.searchValue).subscribe((data) => {
-
-      // Set isFavorite to false for all movies in the search results
       this.movies = data.results.map((movie: Movie) => ({ ...movie, isFavorite: false }));
-      // console.log(this.movies[0]);
     });
   }
 
@@ -53,11 +49,6 @@ export class HomePageComponent implements OnInit {
         this.movies = data.results;
         this.movies = data.results.map((movie: Movie) => ({ ...movie, isFavorite: false }));
         console.log(this.movies);
-        // console.log("hi there ")
       } );
-    }
-
-    getFavoriteMovies(){
-
     }
 }

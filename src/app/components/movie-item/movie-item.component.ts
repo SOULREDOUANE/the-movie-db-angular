@@ -13,48 +13,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './movie-item.component.css'
 })
 export class MovieItemComponent {
-  isFavorite = false;
-
   constructor(private favoriteService:FavoriteServiceService){}
 
   @Input() movie!:Movie;
-
-
-  toggleColor(event: Event) {
-    event.preventDefault();
-
-    if (this.movie.isFavorite) {
-      this.movie.isFavorite = !this.movie.isFavorite;
-      let movieBackend :MovieBackend = {
-        originalMovieId: this.movie.id,
-        name: this.movie.title,
-        isFavorite: this.movie.isFavorite
-      };
-      console.log(this.movie.isFavorite)
-      this.favoriteService.updateMovie(movieBackend.originalMovieId, movieBackend).subscribe(
-        (updatedMovie) => {
-          console.log('Movie updated successfully:', updatedMovie);
-          // Handle success if needed
-        },
-        (error) => {
-          console.error('Failed to update movie:', error);
-          // Handle error if needed
-        }
-      );
-
-    } else {
-      console.log(this.movie)
-
-        this.movie.isFavorite = !this.movie.isFavorite;
-
-        let movieBackend :MovieBackend = {
-          originalMovieId: this.movie.id,
-          name: this.movie.title,
-          isFavorite: this.movie.isFavorite
-        };
-
-      this.favoriteService.saveFavoriteMovie(movieBackend);
-    }
-
-  }
 }

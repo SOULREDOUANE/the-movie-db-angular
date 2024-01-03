@@ -1,3 +1,4 @@
+import { FavoriteServiceService } from './../../services/favorite-service.service';
 import { Comment } from './../../modules/commentaire';
 import { Component, OnInit } from '@angular/core';
 import { Movie } from '../../modules/movie';
@@ -17,40 +18,17 @@ import { CommonModule } from '@angular/common';
 export class MovieDetailsComponent implements OnInit{
   movie!: Movie;
   movieId!:number;
-  comments!:Comment[];
+  comments : Comment[] = [];
 
   content!:string;
-  user:string="redouane soul";
+  public user!: string;
+  public isFavorited : boolean = false;
 
-  constructor(private movieService :ServiceService ,private route: ActivatedRoute){}
+  constructor(private movieService :ServiceService ,private route: ActivatedRoute, private favS: FavoriteServiceService){}
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      // Access the film.id parameter
       const id = params['id'];
       this.movieId=id;
-
-      // Use the id as needed, for example, call your service method
-      // this.getMoviedetails(this.filmId);
-      this.comments = [
-        {
-          id: 1,
-          user: 'John Doe',
-          content: 'This is the first comment.',
-        },
-        {
-          id: 2,
-          user: 'Alice Smith',
-          content: 'Nice work on the project!',
-        },
-        {
-          id: 3,
-          user: 'Bob Johnson',
-          content: 'I have a question about the code.',
-        },
-        // Add more comments as needed
-      ];
-
-
     });
     this.getMovieDetails()
   }
@@ -65,17 +43,33 @@ export class MovieDetailsComponent implements OnInit{
 
 
   addComment() {
-    // Assuming 'comments' is an array where you want to store your comments
     const newComment: Comment = {
       user: this.user,
       content: this.content,
     };
 
     // Assuming 'comments' is an array where you want to store your comments
-    this.comments.push(newComment);
+
 
     // You may want to clear the user and content after adding a comment
     this.user = '';
     this.content = '';
+  }
+
+  public addFavorite(username: string, filmId: string) {
+    this.favS.sendComment(username, filmId).subscribe(
+      (response) => {
+        this.isFavorited = true;
+        console.log('Comment sent successfully!', response);
+      },
+      (error) => {
+        console.error('Error sending comment:', error);
+      }
+    );
+  }
+
+  public deleteFavorite(username: string, filmId: string) {
+
+
   }
 }

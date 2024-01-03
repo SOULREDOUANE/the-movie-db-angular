@@ -7,7 +7,7 @@ import {SignupComponent} from "./components/authentification/signup/signup.compo
 
 export const routes: Routes = [
   {path: "", component:HomePageComponent},
-  {path: "details/:id", component: MovieDetailsComponent},
+  {path: "details/:id", component:MovieDetailsComponent,},
   {path: "auth/login", component: LoginComponent},
   {path: "auth/signup", component: SignupComponent},
   {path: "favorites", component:FavoriteComponent},

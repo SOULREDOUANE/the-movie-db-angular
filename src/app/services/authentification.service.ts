@@ -25,6 +25,8 @@ export class AuthenticationService {
     AuthenticationService.http = h;
     AuthenticationService.router = r;
   }
+
+  
   public static getInstance(router: Router, http: HttpClient): AuthenticationService {
     if (!AuthenticationService.instance) {
       AuthenticationService.instance = new AuthenticationService(router, http);
@@ -67,7 +69,6 @@ export class AuthenticationService {
     return AuthenticationService.http.post(signUpUrl, credentials).subscribe(
       (response) => {
         console.log('Response:', response);
-
       },
       (error) => {
         console.error('Error:', error);
