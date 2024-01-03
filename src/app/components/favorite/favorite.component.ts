@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Movie } from '../../modules/movie';
-import { ServiceService } from '../../services/service.service';
 import { MovieItemComponent } from '../movie-item/movie-item.component';
 import { CommonModule } from '@angular/common';
 import { FavoriteServiceService } from '../../services/favorite-service.service';
@@ -13,19 +11,23 @@ import { FavoriteServiceService } from '../../services/favorite-service.service'
   styleUrl: './favorite.component.css'
 })
 export class FavoriteComponent implements OnInit {
-  constructor(private favoriteService : FavoriteServiceService){}
-  ngOnInit(): void {
-    this.favoriteService.getFavoriteMovies();
-    this.movies=this.favoriteService.favoriteMovies;
+  films: any[];
+
+  constructor(private favoriteService : FavoriteServiceService) {
+    this.films = [];
   }
-  // searchValue!:string;
-  movies!:Movie[]
 
-
-
-
-
-
+  ngOnInit(): void {
+    this.favoriteService.getFavoriteFilms().subscribe(
+      films => {
+        this.films = films; // Assign the films to the component property
+        console.log('Favorite :', this.films); // Optionally log films
+      },
+      error => {
+        console.error('Error', error);
+      }
+    );
+  }
 
 
 // searchMovie(){

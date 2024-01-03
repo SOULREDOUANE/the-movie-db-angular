@@ -19,14 +19,15 @@ export class AuthenticationService {
   private static instance: AuthenticationService;
   private static router: Router;
   private static http: HttpClient;
-  private url: string = environment.API_BASE_URL;
+  //private url: string = environment.API_BASE_URL;
+  private url: string = "http://localhost:8081";
 
   constructor(r: Router, h: HttpClient) {
     AuthenticationService.http = h;
     AuthenticationService.router = r;
   }
 
-  
+
   public static getInstance(router: Router, http: HttpClient): AuthenticationService {
     if (!AuthenticationService.instance) {
       AuthenticationService.instance = new AuthenticationService(router, http);
@@ -38,6 +39,7 @@ export class AuthenticationService {
     AuthenticationService.http.post(`${this.url}/register/login`, credentials)
       .subscribe((response: any) => {
         if (response && response.success) {
+          alert(1)
           localStorage.setItem('Auth', 'true')
           localStorage.setItem('username', credentials.username)
           AuthenticationService.router.navigate(['/']);
